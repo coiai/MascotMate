@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 const messageForm = document.getElementById('message-form');
 const messageInput = document.getElementById('message-input');
 const messages = document.getElementById('messages');
@@ -13,8 +15,9 @@ const sendMessage = async (message) => {
   messageInput.value = '';
 
   try {
-    const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+    const response = await axios.post('https://api.openai.com/v1/completions', {
       prompt: `Q: ${message}\nA:`,
+      model: "text-davinci-003",
       max_tokens: 150,
       n: 1,
       stop: ['\n'],
@@ -22,10 +25,11 @@ const sendMessage = async (message) => {
     }, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': '', // OpenAI API Keyを入力してください
+        'Authorization': 'Bearer ', // OpenAI API Keyを入力してください
       }
     });
     const answer = response.data.choices[0].text.trim();
+    console.log(answer);
     addMessage(`Chatbot: ${answer}`);
   } catch (error) {
     console.error(error);
